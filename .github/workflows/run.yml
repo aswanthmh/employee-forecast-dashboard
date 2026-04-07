@@ -20,7 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pandas prophet gspread oauth2client
+          pip install pandas prophet gspread google-auth
 
-      - name: Run script
-        run: python newjoiners.py
+ - name: Run script
+  env:
+    GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+  run: python newjoiners.py
