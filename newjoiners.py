@@ -1,4 +1,6 @@
 import gspread
+import os
+import json
 from google.oauth2.service_account import Credentials
 import pandas as pd
 from prophet import Prophet
@@ -7,7 +9,15 @@ from prophet import Prophet
 # Google Sheets Auth
 # ----------------------
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
-creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+
+if "GOOGLE_CREDENTIALS" in os.environ:
+    # GitHub Actions
+    creds_dict = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+    creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+else:
+    # Local PC
+    creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+
 client = gspread.authorize(creds)
 
 # Open workbook
